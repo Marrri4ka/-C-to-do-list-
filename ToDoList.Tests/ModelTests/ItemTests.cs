@@ -11,7 +11,7 @@ public class ItemTest : IDisposable
 {
 public void Dispose()
 {
-	Item.ClearAll();
+	Item.DeleteAll();
 }
 
 public ItemTest()
@@ -31,11 +31,13 @@ public void GetDescription_ReturnDescription_String()
 {
 	//Arrange
 	string description = "Walk the dog.";
-	Item newItem = new Item(description);
-	//Act
+	DateTime duedate = new DateTime (1991,07,10);
+	Item newItem = new Item(description,duedate);
+
 	string result = newItem.GetDescription();
-	// Assert
+	DateTime duedate1 = newItem.GetDueDate();
 	Assert.AreEqual(description,result);
+	Assert.AreEqual(duedate,duedate1);
 }
 [TestMethod]
 public void SetDescription_SetDescription_String()
@@ -115,24 +117,38 @@ public void GetAll_ReturnsItems_ItemList()
 	CollectionAssert.AreEqual(newList, result);
 }
 
-//  [TestMethod]
-// public void Save_AssignsIdToObject_Id()
-// {
-//   //Arrange
-//   Item testItem = new Item("Mow the lawn");
-//
-//   //Act
-//   testItem.Save();
-//   Item savedItem = Item.GetAll()[0];
-//
-//   int result = savedItem.GetId();
-//   int testId = testItem.GetId();
-//
-//   //Assert
-//   Assert.AreEqual(testId, result);
-// }
+[TestMethod]
+public void AddCategory_AddCategoryToItem_CategoryList()
+{
+	Item testItem = new Item ("Mow the lawn",new DateTime());
+	testItem.Save();
+	Category testCategory = new Category("Home stuff");
+	testCategory.Save();
+	testItem.AddCategory(testCategory);
 
+	List<Category> result = testItem.GetCategories();
+	List<Category> testList = new List<Category> {
+		testCategory
+	};
+	CollectionAssert.AreEqual (testList,result);
+}
 
+[TestMethod]
+public void Edit_UpdatesItemInDatabase_String()
+{
+	Category testCategory = new Category("Home stuff");
+	testCategory.Save();
+	string testDescription = "Mow the lawn";
+	Item testItem = new Item (testDescription,new DateTime());
+	testItem.Save();
+
+	testItem.AddCategory(testCategory);
+	testItem.Delete();
+	List<Item> resultCategoryItems = testCategory.GetItems();
+	List<Item> testCategoryItems = new List<Item> {
+	};
+	CollectionAssert.AreEqual (testCategoryItems,resultCategoryItems);
+}
 
 
 
@@ -141,79 +157,14 @@ public void Find_ReturnsCorrectItemFromDatabase_Item()
 {
 	DateTime date = new DateTime();
 
-	//Arrange
 	Item testItem = new Item("Mow the lawn", date, 1);
 	testItem.Save();
 
-	//Act
 	Item foundItem = Item.Find(testItem.GetId());
 
-	//Assert
 	Assert.AreEqual(testItem, foundItem);
 }
 
-[TestMethod]
-public void Edit_UpdatesItemInDatabase_String()
-{
-	//Arrange
-	string firstDescription = "Walk the Dog";
-	Item testItem = new Item(firstDescription);
-	testItem.Save();
-	string secondDescription = "Mow the lawn";
-
-	//Act
-	testItem.Edit(secondDescription);
-	string result = Item.Find(testItem.GetId()).GetDescription();
-
-	//Assert
-	Assert.AreEqual(secondDescription, result);
-}
-
-
-
-// [TestMethod]
-//   public void GetCategoryId_ReturnsItemsParentCategoryId_Int()
-//   {
-//     //Arrange
-//     Category newCategory = new Category("Home Tasks");
-//     Item newItem = new Item("Walk the dog.", newCategory.GetId());
-//
-//     //Act
-//     int result = newItem.GetCategoryId();
-//
-//     //Assert
-//     Assert.AreEqual(newCategory.GetId(), result);
-//   }
-
-// [TestMethod]
-// public void GetId_ItemsInstantiateWithAnIdAndGetterReturns_Int()
-// {
-//   //Arrange
-//   string description = "Walk the dog.";
-//   Item newItem = new Item(description);
-//
-//   //Act
-//   int result = newItem.GetId();
-//
-//   //Assert
-//   Assert.AreEqual(1, result);
-// }
-
-// [TestMethod]
-// public void Find_ReturnsCorrectItem_Item()
-// {
-//   //Arrange
-//   string description01 = "Walk the dog";
-//   string description02 = "Wash the dishes";
-//   Item newItem1 = new Item(description01);
-//   Item newItem2 = new Item(description02);
-//
-//   //Act
-//   Item result = Item.Find(2);
-//
-//   //Assert
-//   Assert.AreEqual(newItem2, result);
-// }
 
 }
 }

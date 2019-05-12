@@ -5,164 +5,120 @@ using System;
 
 namespace ToDoList.Tests
 {
-  [TestClass]
-  public class CategoryTest :IDisposable
-  {
-<<<<<<< HEAD
-=======
+[TestClass]
+public class CategoryTest : IDisposable
+{
 
 
-    public CategoryTest()
-   {
-     DBConfiguration.ConnectionString = "server=localhost;user id=root;password=root;port=8889;database=to_do_list_test;";
-   }
-    public void Dispose()
-    {
 
-      Category.ClearAll();
-    }
-
-    [TestMethod]
-      public void CategoryConstructor_CreatesInstanceOfCategory_Category()
-      {
-        Category newCategory = new Category("test category");
-        Assert.AreEqual(typeof(Category), newCategory.GetType());
-      }
->>>>>>> 42c4e7d6fc6082d6511f3d4cdd71190cf0d9c09b
-
-    public CategoryTests()
-     {
-       DBConfiguration.ConnectionString = "server=localhost;user id=root;password=root;port=8889;database=to_do_list_test;";
-     }
-
-
-     //  [TestMethod]
-  //  public void GetAll_CategoriesEmptyAtFirst_0()
-  //  {
-  //    //Arrange, Act
-  //    int result = Category.GetAll().Count;
-  //
-  //    //Assert
-  //    Assert.AreEqual(0, result);
-  //  }
-  //
-  // [TestMethod]
-  // public void Equals_ReturnsTrueIfNamesAreTheSame_Category()
-  // {
-  //   //Arrange, Act
-  //   Category firstCategory = new Category("Household chores");
-  //   Category secondCategory = new Category("Household chores");
-  //
-  //   //Assert
-  //   Assert.AreEqual(firstCategory, secondCategory);
-  // }
-
-  // [TestMethod]
-  // public void Save_SavesCategoryToDatabase_CategoryList()
-  // {
-  //   //Arrange
-  //   Category testCategory = new Category("Household chores");
-  //   testCategory.Save();
-  //
-  //   //Act
-  //   List<Category> result = Category.GetAll();
-  //   List<Category> testList = new List<Category>{testCategory};
-  //
-  //   //Assert
-  //   CollectionAssert.AreEqual(testList, result);
-  // }
-
-//  [TestMethod]
-//  public void Save_DatabaseAssignsIdToCategory_Id()
-//  {
-//    //Arrange
-//    Category testCategory = new Category("Household chores");
-//    testCategory.Save();
-//
-//    //Act
-//    Category savedCategory = Category.GetAll()[0];
-//
-//    int result = savedCategory.GetId();
-//    int testId = testCategory.GetId();
-//
-//    //Assert
-//    Assert.AreEqual(testId, result);
-// }
-
-// [TestMethod]
-// public void Find_FindsCategoryInDatabase_Category()
-// {
-//   //Arrange
-//   Category testCategory = new Category("Household chores");
-//   testCategory.Save();
-//
-//   //Act
-//   Category foundCategory = Category.Find(testCategory.GetId());
-//
-//   //Assert
-//   Assert.AreEqual(testCategory, foundCategory);
-// }
+public CategoryTest()
+{
+	DBConfiguration.ConnectionString = "server=localhost;user id=root;password=root;port=8889;database=to_do_list_test;";
+}
 
 
 [TestMethod]
-    public void GetItems_RetrievesAllItemsWithCategory_ItemList()
-    {
-      //Arrange, Act
-      Category testCategory = new Category("Household chores");
-      testCategory.Save();
-      Item firstItem = new Item("Mow the lawn", testCategory.GetId());
-      firstItem.Save();
-      Item secondItem = new Item("Do the dishes", testCategory.GetId());
-      secondItem.Save();
-      List<Item> testItemList = new List<Item> {firstItem, secondItem};
-      List<Item> resultItemList = testCategory.GetItems();
-
-      //Assert
-      CollectionAssert.AreEqual(testItemList, resultItemList);
-    }
-
-     public void Dispose()
-     {
-       Item.DeleteAll();
-       Category.DeleteAll();
-     }
+public void CategoryConstructor_CreatesInstanceOfCategory_Category()
+{
+	Category newCategory = new Category("test category");
+	Assert.AreEqual(typeof(Category), newCategory.GetType());
+}
 
 
-<<<<<<< HEAD
-=======
-          //Assert
-          CollectionAssert.AreEqual(newList, result);
-        }
+public void CategoryTests()
+{
+	DBConfiguration.ConnectionString = "server=localhost;user id=root;password=root;port=8889;database=to_do_list_test;";
+}
+[TestMethod]
+public void Delete_DeletesCategoryAssociationsFromDatabase_CategoryList()
+{
+	DateTime duedate = new DateTime (1991,07,10);
+	Item testItem = new Item("Walk the dog",duedate );
+	testItem.Save();
+	string testName = "Homework";
+	Category testCategory = new Category(testName);
+	testCategory.Save();
 
-        [TestMethod]
-          public void AddItem_AssociatesItemWithCategory_ItemList()
-          {
-            //Arrange
-            string description = "Walk the dog.";
-            Item newItem = new Item(description, 1);
-            List<Item> newList = new List<Item> { newItem };
-            string name = "Work";
-            Category newCategory = new Category(name);
-            newCategory.AddItem(newItem);
+	testCategory.AddItem (testItem);
+	testCategory.Delete();
+	List<Category> resultItemCategories = testItem.GetCategories();
+	List<Category> testItemCategories = new List<Category> {
+	};
+	CollectionAssert.AreEqual(testItemCategories,resultItemCategories);
+}
+[TestMethod]
+public void Test_AddItem_AddsItemToCategory()
+{
+	Category testCategory = new Category("Books to read");
+	testCategory.Save();
+	DateTime duedate = new DateTime (1991,07,10);
+	Item testItem = new Item("LOTR",duedate);
+	testItem.Save();
+	Item testItem2 = new Item ("Im Westen nichts Neues",duedate);
+	testItem2.Save();
 
-            //Act
-            List<Item> result = newCategory.GetItems();
+	testCategory.AddItem(testItem);
+	testCategory.AddItem(testItem2);
+	List<Item> result = testCategory.GetItems();
+	List<Item> testList = new List<Item> {
+		testItem,testItem2
+	};
+	CollectionAssert.AreEqual(testList,result);
+}
 
-            //Assert
-            CollectionAssert.AreEqual(newList, result);
-          }
+[TestMethod]
+public void GetItems_ReturnAllCategoryItems_ItemList()
+{
+	Category testCategory = new Category("Books to read");
+	testCategory.Save();
+	Item testItem1 = new Item ("Lotr",new DateTime (1991,07,10));
+	testItem1.Save();
+	Item testItem2 = new Item("Im Westen Nichts Neues",new DateTime (1991,07,10));
+	testItem2.Save();
+
+	testCategory.AddItem(testItem1);
+	List<Item> savedItems = testCategory.GetItems();
+	List<Item> testList = new List<Item> {
+		testItem1
+	};
+	CollectionAssert.AreEqual(testList,savedItems);
+}
 
 
-          [TestMethod]
-             public void GetAll_CategoriesEmptyAtFirst_List()
-             {
-               //Arrange, Act
-               int result = Category.GetAll().Count;
+[TestMethod]
+public void GetItems_ReturnsAllCategoryItems_ItemList()
+{
+	//Arrange
+	Category testCategory = new Category("Household chores");
+	testCategory.Save();
+	Item testItem1 = new Item("Mow the lawn",new DateTime (1991,07,10));
+	testItem1.Save();
+	Item testItem2 = new Item("Buy plane ticket",new DateTime (1991,07,10));
+	testItem2.Save();
 
-               //Assert
-               Assert.AreEqual(0, result);
-             }
+	//Act
+	testCategory.AddItem(testItem1);
+	List<Item> savedItems = testCategory.GetItems();
+	List<Item> testList = new List<Item> {
+		testItem1
+	};
 
->>>>>>> 42c4e7d6fc6082d6511f3d4cdd71190cf0d9c09b
-  }
+	//Assert
+	CollectionAssert.AreEqual(testList, savedItems);
+}
+
+public void Dispose()
+{
+	Item.DeleteAll();
+	Category.DeleteAll();
+}
+
+[TestMethod]
+public void GetAll_CategoriesEmptyAtFirst_List()
+{
+	int result = Category.GetAll().Count;
+	Assert.AreEqual(0, result);
+}
+
+}
 }
