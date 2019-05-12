@@ -1,58 +1,33 @@
-<html>
+@using ToDoList.Models;
 
-<head>
-  <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css'>
+<h1>To Do List</h1>
+<h2>Category: @Model["category"].GetName()</h2>
+<hr />
 
+@if (@Model["categoryItems"].Count != 0)
+{
+<h4>Here are all the items in this category:</h4>
+<ul>
+  @foreach (var item in @Model["categoryItems"])
+  {
+  <li>@item.GetDescription()</li>
+  }
+</ul>
+}
 
-</head>
+<h4>Add an item to this category:</h4>
 
-<center><body>
-  <div class="jumbotron">
+<form action='/categories/@Model["category"].GetId()/items/new' method='post'>
+  <label for='itemId'>Select a item</label>
+  <select id='itemId' name='itemId' type='text'>
 
-
-  <h3>Here are all of the items in this category:</h3>
-
-
-    @foreach (var item in @Model["items"])
+    @foreach (var item in @Model["allItems"])
     {
-      <div class="card">
-        <div class="card-header">
-        <a href='/categories/@Model["category"].GetId()/items/@item.GetId()'>
-          @item.GetDescription()
-        </a>
-
-        </div>
-        <div class="card-body">
-          <h5 class="card-title">  <a href='/categories/@Model["category"].GetId()/items/@item.GetId()'>
-           @item.GetDueDate()
-            </a>
-</h5>
-
-        <form action='/categories/@Model["category"].GetId()/items/@item.GetId()/deleteitem' method="post">
-
-            <button type="submit" name="button">Delete item</button>
-          </form>
-            <button type="submit" name="button">  <a href='/categories/@Model["category"].GetId()/items/@item.GetId()/edit'>Edit this item</a></button>
-        </div>
-      </div>
-
-
-
-
-
+    <option value='@item.GetId()'>@item.GetDescription()</option>
     }
 
-    <button type="button" class="btn btn-warning btn-sm btn-block"><a href='/categories/@Model["category"].GetId()/items/new'>Add a new item</a></button>
-<button type="button" class="btn btn-info btn-sm btn-block"><a href='/categories/@Model["category"].GetId()/itemssort'>Sort by duedate</a></button>
-<button type="button" class="btn btn-success btn-sm btn-block"><a href='/categories'>Return to category list</a></button>
-<button type="button" class="btn btn-danger btn-sm btn-block"><a href='/'>Return to Main Page</a></button>
+  </select>
+  <button type='submit'>Add</button>
+</form>
 
-
-
-
-
-
-</div>
-</body>
-</center>
-</html>
+<p><a href="/">Return to Main Page</a></p>

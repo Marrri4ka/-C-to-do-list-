@@ -1,19 +1,23 @@
-<html>
-<head>
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  @using ToDoList.Models;
+  <html>
+
+  <head>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css
 ">
 
-<link rel='stylesheet' href='~/css/styles.css'>
-</head>
-<center><body>
+    <link rel='stylesheet' href='~/css/styles.css'>
+  </head>
+  <center>
 
-<div class="jumbotron">
-<center><h1>To Do List Item Details: </h1><br></center>
+    <body>
+
+      <div class="jumbotron">
+        <!-- <center><h1>To Do List Item Details: </h1><br></center>
 
 <div class="row w-100">
 
@@ -42,6 +46,39 @@
 
 
 
-<a href='/categories'>View all categories</a>
-</body></center>
-</html>
+<a href='/categories'>View all categories</a> -->
+
+
+        <h1>To Do List</h1>
+        <h2>Item: @Model["selectedItem"].GetDescription()</h2>
+        <hr />
+
+        @if (@Model["itemCategories"].Count != 0)
+        {
+        <h4>This item has these categories:</h4>
+        <ul>
+          @foreach (Category category in @Model["itemCategories"])
+          {
+          <li>@category.GetName()</li>
+          }
+        </ul>
+        }
+
+        <h4>Add a category to this item:</h4>
+
+        <form action='/items/@Model["selectedItem"].GetId()/categories/new' method='post'>
+          <label for='categoryId'>Select a category</label>
+          <select id='categoryId' name='categoryId' type='text'>
+            @foreach (var category in @Model["allCategories"])
+            {
+            <option value='@category.GetId()'>@category.GetName()</option>
+            }
+          </select>
+          <button type='submit'>Add</button>
+        </form>
+
+        <p><a href="/">Return to Main Page</a></p>
+    </body>
+  </center>
+
+  </html>

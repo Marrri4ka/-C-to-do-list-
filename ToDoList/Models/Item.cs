@@ -9,22 +9,13 @@ public class Item   // class
 private string _description;
 private DateTime _duedate;     // field
 private int _id;
-// private int _categoryId;
-// private static List<Item> _instances = new List<Item>{}; //list
 
 public Item (string description, DateTime duedate, int id=0)     // constructor
 {
 	_description = description;
 	_duedate = duedate;
-	// _categoryId = categoryId;
-	// _instances.Add(this); //what is this
 	_id = id;
 }
-
-// public int GetCategoryId()
-// {
-//      return _categoryId;
-// }
 
 
 public string GetDescription()
@@ -46,11 +37,6 @@ public void SetDueDate(DateTime newDueDate)
 {
 	_duedate = newDueDate;
 }
-
-
-
-
-
 
 
 public static List<Item> GetAll()
