@@ -7,6 +7,12 @@ namespace ToDoList.Controllers
 {
 public class ItemsController : Controller
 {
+[HttpGet("/items")]
+public ActionResult Index()
+{
+	List<Item> allItems = Item.GetAll();
+	return View(allItems);
+}
 
 [HttpPost("/items")]
 public ActionResult Create(string description, DateTime dueDate)
